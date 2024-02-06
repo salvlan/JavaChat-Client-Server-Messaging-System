@@ -28,7 +28,7 @@ JavaChat is a messaging system implemented in Java, featuring a client-server ar
    - Run ChatClient.java to launch a client instance.
    - Connect multiple clients to the server for real-time chat.
 ## Getting Started
-Clone this repository to set up your JavaChat system. Follow the instructions provided in each Java file to understand the project structure and run the server and client components.
+Clone this repository to set up your JavaChat system. Open the repository folder with your favorite IDE and run the server and client components.
 ## Dependencies
 - Java SE Development Kit (JDK)
 ## Contributing
