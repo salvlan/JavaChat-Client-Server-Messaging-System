@@ -46,7 +46,18 @@ public class ChatClient {
 
         // Set up the send button and its action listener
         JButton sendButton = new JButton("Send");
-        sendButton.addActionListener(new SendButtonListener());
+        sendButton.addActionListener(e->{
+            try {
+                // Send the message to the server
+                writer.println(outGoing.getText());
+                writer.flush();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            // Clear the text field and focus on it
+            outGoing.setText("");
+            outGoing.requestFocus();
+        });
 
         // Add components to the main panel
         mainPanel.add(qScroller);
@@ -56,8 +67,22 @@ public class ChatClient {
         // Set up networking (connect to the server)
         setUpNetworking();
 
-        // Set up a separate thread for reading incoming messages
-        Thread readerThread = new Thread(new IncomingReader());
+        // Set up a separate thread for reading incoming messages.
+        // The Thread constructor expects a Runnable instance, and since Runnable is a functional interface,
+        // the lambda expression can be used to represent an instance of that interface.
+        Thread readerThread = new Thread(()->{
+            String message;
+            try {
+                // Continuously read and display incoming messages
+                while ((message = reader.readLine()) != null) {
+                    System.out.println("read " + message);
+                    incoming.append(message + "\n");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
         readerThread.start();
 
         // Set up the frame and make it visible
@@ -83,37 +108,5 @@ public class ChatClient {
         }
     }
 
-    // ActionListener for the send button
-    public class SendButtonListener implements ActionListener {
-        public void actionPerformed (ActionEvent ev) {
-            try {
-                // Send the message to the server
-                writer.println(outGoing.getText());
-                writer.flush();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            // Clear the text field and focus on it
-            outGoing.setText("");
-            outGoing.requestFocus();
-        }
-    }
-
-    // Runnable for handling incoming messages
-    public class IncomingReader implements Runnable {
-        public void run() {
-            String message;
-            try {
-                // Continuously read and display incoming messages
-                while ((message = reader.readLine()) != null) {
-                    System.out.println("read " + message);
-                    incoming.append(message + "\n");
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 }
 
